@@ -16,12 +16,12 @@ export async function loginUsuario(req, res) {
         const usuario = await usuariosModel.getUsuarioEmail(email);
 
         if (!usuario) {
-            return res.status(401).json( { message: "Correo electrónico incorrectos"});
+            return res.status(401).json( { message: "Correo Electrónico o Contraseña Incorrectos"});
         }
         const isPasswordValid = await usuariosModel.validatePassword(password, usuario.password_usuario);
 
         if (!isPasswordValid) {
-            return res.status(401).json({ message: "Correo contraseña incorrectos" });
+            return res.status(401).json({ message: "Correo Electrónico o Contraseña Incorrectos" });
         }
         //Si la autenticación es exitosa, puedes devolver los datos del usuario
         res.status(200).json(usuario);
