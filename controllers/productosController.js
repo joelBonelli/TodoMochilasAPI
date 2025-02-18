@@ -24,20 +24,52 @@ export async function getProductosId( req, res) {
 
 export async function updateProductosId( req, res) {
     const id = req.params.id
-    const { nombre, precio, descripcion, imagen } = req.body;
+    const { nombre, precio, descripcion } = req.body;
+    const imagen = req.file ? req.file.filename : '';
+
+    if (!nombre || !precio || !descripcion) {
+        return res.status(400).json({ message: "Todos los campos son obligatorios." });
+    }
 
     try {
-        // AQUI HAY QUE VALIDAR LOS DATOS
-
-        const update = await productosModel.updateProductos(id, { nombre, precio, descripcion, imagen} );
+        // Actualizar el producto con la nueva imagen
+        const update = await productosModel.updateProductos(id, { nombre, precio, descripcion, imagen });
 
         if (update.affectedRows > 0) {
-            res.status(200).json( { message: "Producto actualizado correctamente"});
+         
+            res.status(200).json({ message: "Producto actualizado correctamente" });
         } else {
             res.status(404).json({ message: "Producto no encontrado" });
         }
 
     } catch (error) {
-        res.status(500).json( { message: "Error al recuperar el dato del producto"})
+        console.error("Error al actualizar el producto:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
+}
+
+
+export async function createProducto(req, res) {
+    const { nombre, precio, descripcion} = req.body;
+    const imagen = req.file ? req.file.filename : '';
+
+    console.log('Imagen recibida:', imagen);  // Verifica el nombre de la imagen
+
+    if (!nombre || !precio || !descripcion || !imagen) {
+        return res.status(400).json({ message: "Todos los campos son obligatorios." });
+    }
+
+    try {
+        const create = await productosModel.createProducto({ nombre, precio, descripcion, imagen });
+        if (create.insertId) {
+            res.status(200).json( { message: "Producto Insertado Correctamente." });
+            console.log("mochila insertada");
+            
+        } else {
+            res.status(404).json( { message: "No se pudo crear el producto" });
+        }
+    } catch (error) {
+        console.error("Error al crear el producto:", error);
+        res.status(500).json( { message: "Error al crear el producto", error: error.message });
     }
 }

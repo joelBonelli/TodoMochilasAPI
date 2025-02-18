@@ -1,9 +1,14 @@
 import db from '../db.js';
 
+
 export async function getProductos() {
     const query = "SELECT * FROM mochila";
     try {
         const [results] = await db.query(query);
+        const IMAGE_BASE_URL = 'http://localhost:8888/images/';
+        results.forEach(producto => {
+            producto.foto_mochila = IMAGE_BASE_URL + producto.foto_mochila;
+        });
         return results;
     } catch (error) {
         throw error;
@@ -14,7 +19,12 @@ export async function getProductos() {
 export async function getProductosId(id) {
     const query = "SELECT * FROM mochila WHERE id_mochila = ?";
     try {
-        const [results] = await db.query(query, [id])
+        const [results] = await db.query(query, [id]);
+        const IMAGE_BASE_URL = 'http://localhost:8888/images/';  // Asegúrate de usar la URL correcta
+
+        if (results.length > 0) {
+            results[0].foto_mochila = IMAGE_BASE_URL + results[0].foto_mochila;
+        }
         return results
     } catch (error) {
         throw error
@@ -32,6 +42,20 @@ export async function updateProductos(id, data){
 
     try {
         const [results] = await db.query(query, [nombre, precio, stock, descripcion, proveedorId, imagen, id]);
+        return results;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function createProducto(date) {
+    const { nombre, precio, descripcion, imagen } = date;
+    const stock = 100;
+    const proveedorId = 1;
+    const query = `INSERT INTO mochila (nombre_mochila, precio_mochila, stock_mochila, descripcion_mochila, proveedor_id_proveedor, foto_mochila) VALUES (?, ?, ?, ?, ?, ?)`;
+
+    try {
+        const [results] = await db.query(query, [nombre, precio, stock, descripcion, proveedorId, imagen ]);
         return results;
     } catch (error) {
         throw error;
