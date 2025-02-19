@@ -24,17 +24,36 @@ export async function getProductosId( req, res) {
 
 export async function updateProductosId( req, res) {
     const id = req.params.id
-    const { nombre, precio, descripcion } = req.body;
-    const imagen = req.file ? req.file.filename : '';
+    const { nombre, precio, descripcion, imagenActual } = req.body;
+    //const { nombre, precio, descripcion } = req.body;
+
+    console.log("Body recibido:", req.body);
+    console.log("Archivo recibido:", req.file);
+
+
+    // Verifica si multer está recibiendo el archivo
+    if (req.file) {
+        console.log('Archivo recibido:', req.file);
+    } else {
+        console.log('No se recibió ningún archivo');
+    }
+  
+    const imagen = req.file ? req.file.filename : req.body.imagenActual;
+
+    //const imagen = req.file ? req.file.filename : undefined;
+    //const imagen = req.file ? req.file.filename : producto.foto_mochila;
 
     if (!nombre || !precio || !descripcion) {
         return res.status(400).json({ message: "Todos los campos son obligatorios." });
     }
-
+    const updateData = { nombre, precio, descripcion };
+    if (imagen) {
+        updateData.imagen = imagen;
+    }
     try {
         // Actualizar el producto con la nueva imagen
-        const update = await productosModel.updateProductos(id, { nombre, precio, descripcion, imagen });
-
+        //const update = await productosModel.updateProductos(id, { nombre, precio, descripcion, imagen });
+        const update = await productosModel.updateProductos(id, updateData);
         if (update.affectedRows > 0) {
          
             res.status(200).json({ message: "Producto actualizado correctamente" });

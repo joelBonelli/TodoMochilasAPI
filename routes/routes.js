@@ -10,7 +10,7 @@ route.get("/productos/:id", productosController.getProductosId);
 //route.put("/productos/actualizar/:id", productosController.updateProductosId);
 // route.post("/productos/create", productosController.createProducto);
 route.post("/productos/create", upload.single('imagen'), productosController.createProducto);
-route.post("/productos/actualizar/:id", upload.single('imagen'), productosController.updateProductosId);
+route.put("/productos/actualizar/:id", upload.single('imagen'), productosController.updateProductosId);
 route.delete("/productos/delete/:id", productosController.deleteProducto);
 
 route.get("/usuarios/sesion", usuariosController.getUsuarios);
