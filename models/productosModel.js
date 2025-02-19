@@ -61,3 +61,15 @@ export async function createProducto(date) {
         throw error;
     }
 }
+
+
+export async function deleteProducto(id) {
+    const query = "DELETE FROM mochila WHERE id_mochila = ?";
+
+    try {
+        const [results] = await db.query(query, [id]);
+        return results
+    } catch (error) {
+        throw error
+    }
+}

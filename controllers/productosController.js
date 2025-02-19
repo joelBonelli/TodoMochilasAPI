@@ -73,3 +73,15 @@ export async function createProducto(req, res) {
         res.status(500).json( { message: "Error al crear el producto", error: error.message });
     }
 }
+
+export async function deleteProducto(req, res) {
+    const id  = req.params.id;
+
+    try {
+        const results = await productosModel.deleteProducto(id)
+        res.status(200).json(results)
+    } catch (error) {
+        res.status(500).json( { message: "Error al eliminar el producto"})
+        console.log(error);  
+    }
+}
