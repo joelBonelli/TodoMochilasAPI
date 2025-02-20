@@ -22,6 +22,14 @@ export async function getUsuarioEmail(email) {
     }
 }
 
+// export async function validatePassword(inputPassword, storedPassword) {
+//     return inputPassword === storedPassword;
+// }
+
+
 export async function validatePassword(inputPassword, storedPassword) {
-    return inputPassword === storedPassword;
+    return await bcrypt.compare(inputPassword, storedPassword);
 }
+
+
+
