@@ -15,6 +15,11 @@ route.delete("/productos/delete/:id", productosController.deleteProducto);
 
 
 // USUARIOS
+route.get("/usuarios", usuariosController.getUsuarios);
+route.get("/usuarios/:id", usuariosController.getUsuariosId);
+route.put("/usuarios/actualizar/:id",upload.none(), usuariosController.updateUsuariosId);
+route.post("/usuarios/create", upload.none(), usuariosController.createUsuario);
+route.delete("/usuarios/delete/:id", usuariosController.deleteUsuario);
 route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);
 

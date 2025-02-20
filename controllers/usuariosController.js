@@ -11,25 +11,44 @@ export async function getUsuarios(req, res) {
 }
 
 
-// export async function loginUsuario(req, res) {
-//     const { email, password } = req.body; 
-//     try {
-//         const usuario = await usuariosModel.getUsuarioEmail(email);
+export async function getUsuariosId(req, res) {
+    const id = req.params.id
 
-//         if (!usuario) {
-//             return res.status(401).json( { message: "Correo Electrónico o Contraseña Incorrectos"});
-//         }
-//         const isPasswordValid = await usuariosModel.validatePassword(password, usuario.password_usuario);
+    console.log(id)
 
-//         if (!isPasswordValid) {
-//             return res.status(401).json({ message: "Correo Electrónico o Contraseña Incorrectos" });
-//         }
-//         //Si la autenticación es exitosa, puedes devolver los datos del usuario
-//         res.status(200).json(usuario);
-//     } catch (error) {
-//         res.status(500).json({ message: "Error al iniciar sesión" });
-//     }
-// }
+    try{
+        const results = await usuariosModel.getUsuarioId(id)
+        res.status(200).json(results)
+    } catch (error) {
+        res.status(500).json({ message: "Error al recuperar el dato del usuario" })
+    }
+}
+
+
+export async function updateUsuariosId(req, res) {
+    const id = req.params.id;
+    const { correo, nombre, apellido, dni, password, rol, legajo } = req.body;
+
+    console.log(id)
+
+    if (!correo || !nombre || !apellido || !dni || !password || !rol || !legajo) {
+        return res.status(400).json({ message: "Todos los campos son obligatorios" });
+    }
+    const updateData = { correo, nombre, apellido, dni, password, rol, legajo };
+    try {
+        const update = await usuariosModel.updateUsuarios(id, updateData);
+        if (update.affectedRows > 0) {
+            res.status(200).json({ message: "Usuario actualizado correctamente" });
+        } else {
+            res.status(404).json({ message: "No se pudo actualizar el usuario" });
+        }
+    } catch (error) {
+        console.error("Error al actualizar el usuario:", error);
+        res.status(500).json({ message: "Error al actualizar el usuario", error: error.message });
+    }
+}
+
+
 
 
 export async function loginUsuario(req, res) {
@@ -60,37 +79,38 @@ export async function loginUsuario(req, res) {
     }
 }
 
+export async function deleteUsuario(req, res) {
+    const id = req.params.id;
 
+    try {
+        const results = await usuariosModel.deleteUsuario(id);
+        res.status(200).json(results)
+    } catch (error) {
+        res.status(500).json({ message: "Error al eliminar el usuario" });
+        console.log(error);
+    }
+}
 
+export async function createUsuario(req, res) {
+    const { correo, nombre, apellido, dni, password, rol, legajo } = req.body;
 
+    console.log(correo);
 
-// export async function loginUsuario(req, res) {
-//     const { email, password } = req.body; 
-//     try {
-//         const usuario = await usuariosModel.getUsuarioEmail(email);
+    if (!correo || !nombre || !password || !rol || !apellido || !dni || !legajo) {
+        return res.status(400).json({ message: "Todos los campos son obligatorios" });
+    }
 
-//         if (!usuario) {
-//             return res.status(401).json( { message: "Correo Electrónico o Contraseña Incorrectos"});
-//         }
-//         const isPasswordValid = await usuariosModel.validatePassword(password, usuario.password_usuario);
+    try {
+        const create = await usuariosModel.createUsuario({ correo, nombre, password, rol, apellido, dni, legajo });
+        if (create.insertId) {
+            res.status(200).json({ message: "Usuario creado correctamente" });
+            console.log("Usuario insertado");
+        } else {
+            res.status(404).json({ message: "No se pudo crear el usuario" });
+        }
+    } catch (error) {
+        console.error("Error al crear el usuario:", error);
+        res.status(500).json({ message: "Error al crear el usuario", error: error.message });
+    }
+}
 
-//         if (!isPasswordValid) {
-//             return res.status(401).json({ message: "Correo Electrónico o Contraseña Incorrectos" });
-//         }
-//         //Si la autenticación es exitosa, puedes devolver los datos del usuario
-//         res.status(200).json(usuario);
-//     } catch (error) {
-//         res.status(500).json({ message: "Error al iniciar sesión" });
-//     }
-// }
-
-
-   // try {
-    //     const results = await usuariosModel.getUsuarioEmail(correo_usuario);
-    //     if (!results) {
-    //         return res.status(401).json({ message: "Correo electrónico incorrecto" });
-    //     }
-    //     res.status(200).json(results);
-    // } catch (error) {
-    //     res.status(500).json( { message: "Error al recuperar los datos"});
-    // }
