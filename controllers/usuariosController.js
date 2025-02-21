@@ -100,8 +100,11 @@ export async function createUsuario(req, res) {
         return res.status(400).json({ message: "Todos los campos son obligatorios" });
     }
 
+    // Hashear la contraseña antes de enviarla al modelo
+    const hashedPassword = await usuariosModel.hashPassword(password);
+
     try {
-        const create = await usuariosModel.createUsuario({ correo, nombre, password, rol, apellido, dni, legajo });
+        const create = await usuariosModel.createUsuario({ correo, nombre, password: hashedPassword, rol, apellido, dni, legajo });
         if (create.insertId) {
             res.status(200).json({ message: "Usuario creado correctamente" });
             console.log("Usuario insertado");

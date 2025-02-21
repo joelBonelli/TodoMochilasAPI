@@ -75,10 +75,14 @@ export async function deleteUsuario(id) {
 //     return inputPassword === storedPassword;
 // }
 
+export async function hashPassword(password) {
+    try {
+        return await bcrypt.hash(password, 10);
+    } catch (error) {
+        throw new Error("Error al hashear la contraseña");
+    }
+}
 
 export async function validatePassword(inputPassword, storedPassword) {
     return await bcrypt.compare(inputPassword, storedPassword);
 }
-
-
-
