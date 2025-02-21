@@ -79,7 +79,7 @@ export async function loginUsuario(req, res) {
             nivel_usuario: usuario.nivel_usuario,
         }
 
-        const token = jwt.sign(playload, process.env.JWT_SECRET_KEY, { expiresIn: "60s" });
+        const token = jwt.sign(playload, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
         res.status(200).json({token, user: playload});
 
         //res.status(200).json(usuario);

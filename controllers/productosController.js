@@ -73,6 +73,7 @@ export async function createProducto(req, res) {
     const imagen = req.file ? req.file.filename : '';
 
     console.log('Imagen recibida:', imagen);  // Verifica el nombre de la imagen
+    
 
     if (!nombre || !precio || !descripcion || !imagen) {
         return res.status(400).json({ message: "Todos los campos son obligatorios." });
