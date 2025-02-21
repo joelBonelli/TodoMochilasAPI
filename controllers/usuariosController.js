@@ -27,14 +27,14 @@ export async function getUsuariosId(req, res) {
 
 export async function updateUsuariosId(req, res) {
     const id = req.params.id;
-    const { correo, nombre, apellido, dni, password, rol, legajo } = req.body;
+    const { correo, nombre, apellido, dni,  rol, legajo } = req.body;
 
     console.log(id)
 
-    if (!correo || !nombre || !apellido || !dni || !password || !rol || !legajo) {
+    if (!correo || !nombre || !apellido || !dni || !rol || !legajo) {
         return res.status(400).json({ message: "Todos los campos son obligatorios" });
     }
-    const updateData = { correo, nombre, apellido, dni, password, rol, legajo };
+    const updateData = { correo, nombre, apellido, dni,  rol, legajo };
     try {
         const update = await usuariosModel.updateUsuarios(id, updateData);
         if (update.affectedRows > 0) {
