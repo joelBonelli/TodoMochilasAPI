@@ -1,4 +1,5 @@
 import * as usuariosModel from "../models/usuariosModel.js";
+import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 
 export async function getUsuarios(req, res) {
@@ -70,12 +71,22 @@ export async function loginUsuario(req, res) {
             console.log("❌ Contraseña incorrecta");
             return res.status(401).json({ message: "Correo Electrónico o Contraseña Incorrectos" });
         }
-
         console.log("✅ Contraseña correcta");
-        
-        res.status(200).json(usuario);
+
+        const playload = {
+            nombre_usuario: usuario.nombre_usuario,
+            apellido_usuario: usuario.apellido_usuario,
+            nivel_usuario: usuario.nivel_usuario,
+        }
+
+        const token = jwt.sign(playload, process.env.JWT_SECRET_KEY, { expiresIn: "60s" });
+        res.status(200).json({token, user: playload});
+
+        //res.status(200).json(usuario);
     } catch (error) {
         res.status(500).json({ message: "Error al iniciar sesión" });
+        console.log(error);
+        
     }
 }
 

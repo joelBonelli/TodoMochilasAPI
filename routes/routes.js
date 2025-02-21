@@ -2,6 +2,7 @@ import express from "express";
 import upload from '../middleware/upload.js';
 import * as productosController from "../controllers/productosController.js"
 import * as usuariosController from "../controllers/usuariosController.js"
+import { verifyToken } from "../middleware/auth.js";
 
 const route = express.Router();
 
@@ -9,9 +10,9 @@ const route = express.Router();
 route.get("/productos", productosController.getProductos);
 route.get("/productos/:id", productosController.getProductosId);
 // route.post("/productos/create", productosController.createProducto);
-route.post("/productos/create", upload.single('imagen'), productosController.createProducto);
-route.put("/productos/actualizar/:id", upload.single('imagen'), productosController.updateProductosId);
-route.delete("/productos/delete/:id", productosController.deleteProducto);
+route.post("/productos/create", upload.single('imagen'), verifyToken, productosController.createProducto);
+route.put("/productos/actualizar/:id", upload.single('imagen'), verifyToken, productosController.updateProductosId);
+route.delete("/productos/delete/:id", verifyToken, productosController.deleteProducto);
 
 
 // USUARIOS
