@@ -81,8 +81,7 @@ export async function loginUsuario(req, res) {
 
         const token = jwt.sign(playload, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
         res.status(200).json({token, user: playload});
-
-        //res.status(200).json(usuario);
+        
     } catch (error) {
         res.status(500).json({ message: "Error al iniciar sesión" });
         console.log(error);

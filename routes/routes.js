@@ -9,7 +9,6 @@ const route = express.Router();
 // PRODUCTOS
 route.get("/productos", productosController.getProductos);
 route.get("/productos/:id", productosController.getProductosId);
-// route.post("/productos/create", productosController.createProducto);
 route.post("/productos/create", upload.single('imagen'), verifyToken, productosController.createProducto);
 route.put("/productos/actualizar/:id", upload.single('imagen'), verifyToken, productosController.updateProductosId);
 route.delete("/productos/delete/:id", verifyToken, productosController.deleteProducto);
@@ -18,9 +17,11 @@ route.delete("/productos/delete/:id", verifyToken, productosController.deletePro
 // USUARIOS
 route.get("/usuarios", usuariosController.getUsuarios);
 route.get("/usuarios/:id", usuariosController.getUsuariosId);
-route.put("/usuarios/actualizar/:id",upload.none(), usuariosController.updateUsuariosId);
-route.post("/usuarios/create", upload.none(), usuariosController.createUsuario);
-route.delete("/usuarios/delete/:id", usuariosController.deleteUsuario);
+
+route.post("/usuarios/create", upload.none(), verifyToken, usuariosController.createUsuario);
+route.put("/usuarios/actualizar/:id",upload.none(), verifyToken, usuariosController.updateUsuariosId);
+route.delete("/usuarios/delete/:id", verifyToken,usuariosController.deleteUsuario);
+route.post("/usuarios/register", upload.none(), usuariosController.createUsuario);
 route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);
 
