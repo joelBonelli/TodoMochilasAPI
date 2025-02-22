@@ -104,26 +104,40 @@ export async function deleteUsuario(req, res) {
 export async function createUsuario(req, res) {
     const { correo, nombre, apellido, dni, password, rol, legajo } = req.body;
 
-    console.log(correo);
-
     if (!correo || !nombre || !password || !rol || !apellido || !dni || !legajo) {
         return res.status(400).json({ message: "Todos los campos son obligatorios" });
     }
 
-    // Hashear la contraseña antes de enviarla al modelo
-    const hashedPassword = await usuariosModel.hashPassword(password);
-
     try {
-        const create = await usuariosModel.createUsuario({ correo, nombre, password: hashedPassword, rol, apellido, dni, legajo });
+        // Verificar si el correo ya está registrado
+        const existingUser = await usuariosModel.getUsuarioEmail(correo);
+        if (existingUser) {
+            return res.status(400).json({ message: "El correo ya está registrado" });
+        }
+
+        // Hashear la contraseña antes de enviarla al modelo
+        const hashedPassword = await usuariosModel.hashPassword(password);
+
+        // Insertar usuario
+        const create = await usuariosModel.createUsuario({
+            nombre,
+            apellido,
+            dni,
+            password: hashedPassword,
+            correo,
+            rol,
+            legajo
+        });
+
         if (create.insertId) {
             res.status(200).json({ message: "Usuario creado correctamente" });
-            console.log("Usuario insertado");
         } else {
-            res.status(404).json({ message: "No se pudo crear el usuario" });
+            res.status(500).json({ message: "No se pudo crear el usuario" });
         }
     } catch (error) {
         console.error("Error al crear el usuario:", error);
         res.status(500).json({ message: "Error al crear el usuario", error: error.message });
     }
 }
+
 

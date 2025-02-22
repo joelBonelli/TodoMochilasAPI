@@ -73,3 +73,14 @@ export async function deleteProducto(id) {
         throw error
     }
 }
+
+export async function descontarStock(productoId, cantidad) {
+    const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ? AND stock_mochila >= ?`;
+    
+    try {
+        const [results] = await db.query(query, [cantidad, productoId, cantidad]);
+        return results;
+    } catch (error) {
+        throw error;
+    }
+}

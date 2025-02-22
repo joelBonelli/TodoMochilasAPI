@@ -3,6 +3,7 @@ import upload from '../middleware/upload.js';
 import * as productosController from "../controllers/productosController.js"
 import * as usuariosController from "../controllers/usuariosController.js"
 import { verifyToken } from "../middleware/auth.js";
+import { realizarCompra } from "../controllers/comprasController.js";
 
 const route = express.Router();
 
@@ -24,5 +25,8 @@ route.delete("/usuarios/delete/:id", verifyToken,usuariosController.deleteUsuari
 route.post("/usuarios/register", upload.none(), usuariosController.createUsuario);
 route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);
+
+// COMPRAS
+router.post("/comprar", realizarCompra);
 
 export default route;
