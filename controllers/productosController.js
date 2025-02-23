@@ -1,4 +1,5 @@
 import * as productosModel from "../models/productosModel.js";
+import db from '../db.js';
 
 
 export async function getProductos(req, res) {
@@ -100,3 +101,78 @@ export async function deleteProducto(req, res) {
         console.log(error);  
     }
 }
+
+
+export async function descontarStock(productoId, cantidad) {
+    const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ? AND stock_mochila >= ?`;
+    
+    try {
+        const [results] = await db.query(query, [cantidad, productoId, cantidad]);
+        return results;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function restarStock(req, res) {
+    const { id } = req.params;
+    const { cantidad } = req.body;
+
+    // Verificación de cantidad válida
+    if (!cantidad || isNaN(cantidad) || cantidad <= 0) {
+        return res.status(400).json({ message: "La cantidad debe ser un número positivo." });
+    }
+
+    try {
+        // Llamamos a la función descontarStock para verificar el stock y restar
+        const result = await productosModel.descontarStock(id, cantidad);
+
+        // Si hay un error en el resultado (por ejemplo, falta de stock)
+        if (result.error) {
+            return res.status(400).json({ message: result.error });
+        }
+
+        // Si la operación fue exitosa, respondemos con un mensaje adecuado
+        if (result.affectedRows > 0) {
+            res.status(200).json({ message: "Compra completada y stock actualizado." });
+        } else {
+            res.status(400).json({ message: "No se pudo actualizar el stock." });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Error al actualizar el stock.", error: error.message });
+    }
+}
+
+export const verificarStock = async (req, res) => {
+    console.log("Body recibido:", req.body); // 🛠️ Para depuración
+
+    const { productos } = req.body;
+
+    if (!productos || !Array.isArray(productos) || productos.length === 0) {
+        return res.status(400).json({ error: "La lista de productos es inválida o está vacía." });
+    }
+
+    try {
+        for (const product of productos) {
+            const [producto] = await db.query(
+                "SELECT stock_mochila FROM mochila WHERE id_mochila = ?",
+                [product.id_mochila]
+            );
+
+            if (producto.length === 0) {
+                return res.status(400).json({ error: `Producto con ID ${product.id_mochila} no encontrado.` });
+            }
+
+            if (product.cantidad > producto[0].stock_mochila) {
+                return res.status(400).json({
+                    error: `No hay suficiente stock de ${product.nombre_mochila}.`,
+                });
+            }
+        }
+
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Error al verificar el stock.", details: error.message });
+    }
+};

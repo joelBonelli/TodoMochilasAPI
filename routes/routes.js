@@ -3,7 +3,8 @@ import upload from '../middleware/upload.js';
 import * as productosController from "../controllers/productosController.js"
 import * as usuariosController from "../controllers/usuariosController.js"
 import { verifyToken } from "../middleware/auth.js";
-import { realizarCompra } from "../controllers/comprasController.js";
+import { verificarStock } from "../controllers/productosController.js";
+
 
 const route = express.Router();
 
@@ -13,6 +14,8 @@ route.get("/productos/:id", productosController.getProductosId);
 route.post("/productos/create", upload.single('imagen'), verifyToken, productosController.createProducto);
 route.put("/productos/actualizar/:id", upload.single('imagen'), verifyToken, productosController.updateProductosId);
 route.delete("/productos/delete/:id", verifyToken, productosController.deleteProducto);
+route.put('/productos/:id/restar-stock', verifyToken, productosController.restarStock);
+route.post("/productos/verificar-stock", productosController.verificarStock);
 
 
 // USUARIOS
@@ -27,6 +30,5 @@ route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);
 
 // COMPRAS
-route.post("/comprar", realizarCompra);
 
 export default route;
