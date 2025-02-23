@@ -75,12 +75,30 @@ export async function deleteProducto(id) {
 }
 
 export async function descontarStock(productoId, cantidad) {
-    const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ? AND stock_mochila >= ?`;
+    // Verificar si el producto existe y tiene suficiente stock
+    const verificarQuery = `SELECT stock_mochila FROM mochila WHERE id_mochila = ?`;
     
     try {
-        const [results] = await db.query(query, [cantidad, productoId, cantidad]);
+        const [producto] = await db.query(verificarQuery, [productoId]);
+
+        if (producto.length === 0) {
+            return { error: "El producto no existe." };
+        }
+
+        const stockActual = producto[0].stock_mochila;
+        
+        if (stockActual < cantidad) {
+            return { error: "Stock insuficiente." };
+        }
+
+        // Restar stock
+        const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ?`;
+        const [results] = await db.query(query, [cantidad, productoId]);
+
         return results;
     } catch (error) {
         throw error;
     }
 }
+
+

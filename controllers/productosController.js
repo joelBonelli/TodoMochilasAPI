@@ -100,3 +100,40 @@ export async function deleteProducto(req, res) {
         console.log(error);  
     }
 }
+
+
+export async function descontarStock(productoId, cantidad) {
+    const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ? AND stock_mochila >= ?`;
+    
+    try {
+        const [results] = await db.query(query, [cantidad, productoId, cantidad]);
+        return results;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function restarStock(req, res) {
+    const { id } = req.params;  // ID del producto
+    const { cantidad } = req.body;  // Cantidad a restar
+
+    if (!cantidad || isNaN(cantidad) || cantidad <= 0) {
+        return res.status(400).json({ message: "La cantidad debe ser un número positivo." });
+    }
+
+    try {
+        const result = await productosModel.descontarStock(id, cantidad);
+
+        if (result.error) {
+            return res.status(400).json({ message: result.error });
+        }
+
+        if (result.affectedRows > 0) {
+            res.status(200).json({ message: "Stock actualizado correctamente." });
+        } else {
+            res.status(400).json({ message: "No se pudo actualizar el stock." });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Error al actualizar el stock.", error: error.message });
+    }
+}
