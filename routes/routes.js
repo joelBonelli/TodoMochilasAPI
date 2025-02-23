@@ -3,7 +3,7 @@ import upload from '../middleware/upload.js';
 import * as productosController from "../controllers/productosController.js"
 import * as usuariosController from "../controllers/usuariosController.js"
 import { verifyToken } from "../middleware/auth.js";
-import { verificarStock } from "../controllers/productosController.js";
+//import { verificarStock } from "../controllers/productosController.js";
 
 
 const route = express.Router();
@@ -15,7 +15,7 @@ route.post("/productos/create", upload.single('imagen'), verifyToken, productosC
 route.put("/productos/actualizar/:id", upload.single('imagen'), verifyToken, productosController.updateProductosId);
 route.delete("/productos/delete/:id", verifyToken, productosController.deleteProducto);
 route.put('/productos/:id/restar-stock', verifyToken, productosController.restarStock);
-route.post("/productos/verificar-stock", productosController.verificarStock);
+//route.post("/productos/verificar-stock", productosController.verificarStock);
 
 
 // USUARIOS
