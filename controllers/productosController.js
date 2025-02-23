@@ -143,6 +143,29 @@ export async function restarStock(req, res) {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const verificarStock = async (req, res) => {
     console.log("Body recibido:", req.body); // 🛠️ Para depuración
 
