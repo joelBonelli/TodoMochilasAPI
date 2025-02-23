@@ -75,57 +75,13 @@ export async function deleteProducto(id) {
     }
 }
 
-
-export async function descontarStock(productoId, cantidad) {
-    // Consulta el stock disponible
-    const stockQuery = "SELECT stock_mochila FROM mochila WHERE id_mochila = ?";
-    
-    try {
-        const [producto] = await db.query(stockQuery, [productoId]);
-        
-        if (producto.length === 0) {
-            return { error: "Producto no encontrado" };
-        }
-
-        const stockDisponible = producto[0].stock_mochila;
-
-        // Verifica si hay suficiente stock
-        if (cantidad > stockDisponible) {
-            return { error: "No hay suficiente stock disponible." };
-        }
-
-        // Si hay suficiente stock, actualizamos el stock
+export const restarStock = async (id, cantidad) => {
         const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ?`;
-        const [results] = await db.query(query, [cantidad, productoId]);
-
-        return results;
-    } catch (error) {
-        throw error;
-    }
-}
-
-
-// Controlador para restar stock
-// Restar stock verificando disponibilidad
-export async function restarStock(productoId, cantidad) {
-    try {
-        // Obtener el producto para verificar el stock
-        const producto = await getProductosId(productoId);
-
-        if (!producto) {
-            return { error: "Producto no encontrado." };
+        try {
+            const [results] = await db.query(query, [cantidad, id]);
+            return results;
+        } catch (error) {
+            throw error;
         }
+};
 
-        if (cantidad > producto.stock_mochila) {
-            return { error: `No hay suficiente stock de ${producto.nombre_mochila}.` };
-        }
-
-        // Si hay suficiente stock, proceder con la actualización
-        const query = "UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ?";
-        const [results] = await db.query(query, [cantidad, productoId]);
-
-        return results;
-    } catch (error) {
-        throw error;
-    }
-}

@@ -103,20 +103,11 @@ export async function deleteProducto(req, res) {
 }
 
 
-export async function descontarStock(productoId, cantidad) {
-    const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ? AND stock_mochila >= ?`;
-    
-    try {
-        const [results] = await db.query(query, [cantidad, productoId, cantidad]);
-        return results;
-    } catch (error) {
-        throw error;
-    }
-}
 
 export async function restarStock(req, res) {
     const { id } = req.params;
     const { cantidad } = req.body;
+    
 
     // Validar cantidad
     if (!cantidad || isNaN(cantidad) || cantidad <= 0) {
@@ -124,19 +115,30 @@ export async function restarStock(req, res) {
     }
 
     try {
-        // Llamamos al modelo para verificar y restar stock
+        // Obtener el producto por ID para verificar su stock actual
+        const producto = await productosModel.getProductosId(id);
+               
+
+        if (!producto) {
+            return res.status(404).json({ message: "El producto no existe." });
+        }
+
+        // Verificar si hay suficiente stock
+        if (producto.stock_mochila < cantidad) {
+            return res.status(400).json({ message: "Stock insuficiente." });
+        }
+        console.log(cantidad);
+        
+        
+        // Restar el stock
         const result = await productosModel.restarStock(id, cantidad);
 
-        if (result.error) {
-            return res.status(400).json({ message: result.error });
-        }
-
         if (result.affectedRows > 0) {
-            res.status(200).json({ message: "Stock actualizado correctamente." });
+            return res.status(200).json({ message: "Stock actualizado correctamente." });
         } else {
-            res.status(400).json({ message: "No se pudo actualizar el stock." });
+            return res.status(400).json({ message: "No se pudo actualizar el stock." });
         }
     } catch (error) {
-        res.status(500).json({ message: "Error al actualizar el stock.", error: error.message });
+        return res.status(500).json({ message: "Error al actualizar el stock.", error: error.message });
     }
 }
