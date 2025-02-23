@@ -27,6 +27,6 @@ route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);
 
 // COMPRAS
-router.post("/comprar", realizarCompra);
+route.post("/comprar", realizarCompra);
 
 export default route;
