@@ -4,7 +4,6 @@ import * as productosController from "../controllers/productosController.js"
 import * as usuariosController from "../controllers/usuariosController.js"
 import { verifyToken } from "../middleware/auth.js";
 
-
 const route = express.Router();
 
 // PRODUCTOS
@@ -27,5 +26,7 @@ route.delete("/usuarios/delete/:id", verifyToken,usuariosController.deleteUsuari
 route.post("/usuarios/register", upload.none(), usuariosController.createUsuario);
 route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);
+
+// COMPRAS
 
 export default route;
