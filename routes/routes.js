@@ -3,7 +3,6 @@ import upload from '../middleware/upload.js';
 import * as productosController from "../controllers/productosController.js"
 import * as usuariosController from "../controllers/usuariosController.js"
 import { verifyToken } from "../middleware/auth.js";
-import { realizarCompra } from "../controllers/comprasController.js";
 
 const route = express.Router();
 
@@ -27,6 +26,5 @@ route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);
 
 // COMPRAS
-route.post("/comprar", realizarCompra);
 
 export default route;
