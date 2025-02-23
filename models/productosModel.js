@@ -24,6 +24,7 @@ export async function getProductosId(id) {
 
         if (results.length > 0) {
             results[0].foto_mochila = IMAGE_BASE_URL + results[0].foto_mochila;
+           // results[0];
         }
         return results
     } catch (error) {
@@ -105,28 +106,26 @@ export async function descontarStock(productoId, cantidad) {
 
 
 // Controlador para restar stock
-export async function restarStock(req, res) {
-    const { id } = req.params;
-    const { cantidad } = req.body;
-
-    if (!cantidad || isNaN(cantidad) || cantidad <= 0) {
-        return res.status(400).json({ message: "La cantidad debe ser un número positivo." });
-    }
-
+// Restar stock verificando disponibilidad
+export async function restarStock(productoId, cantidad) {
     try {
-        // Llamamos a la función descontarStock para verificar stock y restar
-        const result = await productosModel.descontarStock(id, cantidad);
+        // Obtener el producto para verificar el stock
+        const producto = await getProductosId(productoId);
 
-        if (result.error) {
-            return res.status(400).json({ message: result.error });
+        if (!producto) {
+            return { error: "Producto no encontrado." };
         }
 
-        if (result.affectedRows > 0) {
-            res.status(200).json({ message: "Stock actualizado correctamente." });
-        } else {
-            res.status(400).json({ message: "No se pudo actualizar el stock." });
+        if (cantidad > producto.stock_mochila) {
+            return { error: `No hay suficiente stock de ${producto.nombre_mochila}.` };
         }
+
+        // Si hay suficiente stock, proceder con la actualización
+        const query = "UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ?";
+        const [results] = await db.query(query, [cantidad, productoId]);
+
+        return results;
     } catch (error) {
-        res.status(500).json({ message: "Error al actualizar el stock.", error: error.message });
+        throw error;
     }
 }
