@@ -28,7 +28,4 @@ route.post("/usuarios/register", upload.none(), usuariosController.createUsuario
 route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);
 
-
-
-
 export default route;
