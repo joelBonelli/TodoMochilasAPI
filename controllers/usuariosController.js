@@ -4,11 +4,11 @@ import dotenv from 'dotenv';
 
 export async function getUsuarios(req, res) {
     try {
-            const results = await usuariosModel.getUsuarios()
-            res.status(200).json(results);
-        } catch (error) {
-            res.status(500).json( { message: "Error al recuperar los datos"});
-        }
+        const results = await usuariosModel.getUsuarios()
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(500).json({ message: "Error al recuperar los datos" });
+    }
 }
 
 
@@ -17,7 +17,7 @@ export async function getUsuariosId(req, res) {
 
     console.log(id)
 
-    try{
+    try {
         const results = await usuariosModel.getUsuarioId(id)
         res.status(200).json(results)
     } catch (error) {
@@ -28,14 +28,14 @@ export async function getUsuariosId(req, res) {
 
 export async function updateUsuariosId(req, res) {
     const id = req.params.id;
-    const { correo, nombre, apellido, dni,  rol, legajo } = req.body;
+    const { correo, nombre, apellido, dni, rol, legajo } = req.body;
 
     console.log(id)
 
     if (!correo || !nombre || !apellido || !dni || !rol || !legajo) {
         return res.status(400).json({ message: "Todos los campos son obligatorios" });
     }
-    const updateData = { correo, nombre, apellido, dni,  rol, legajo };
+    const updateData = { correo, nombre, apellido, dni, rol, legajo };
     try {
         const update = await usuariosModel.updateUsuarios(id, updateData);
         if (update.affectedRows > 0) {
@@ -53,14 +53,14 @@ export async function updateUsuariosId(req, res) {
 
 
 export async function loginUsuario(req, res) {
-    const { email, password } = req.body; 
+    const { email, password } = req.body;
     console.log("Contraseña ingresada:", password); // 🔍 Verifica qué está llegando
 
     try {
         const usuario = await usuariosModel.getUsuarioEmail(email);
 
         if (!usuario) {
-            return res.status(401).json( { message: "Correo Electrónico o Contraseña Incorrectos"} );
+            return res.status(401).json({ message: "Correo Electrónico o Contraseña Incorrectos" });
         }
 
         console.log("Contraseña en BD:", usuario.password_usuario); // 🔍 Verifica la contraseña encriptada
@@ -80,12 +80,12 @@ export async function loginUsuario(req, res) {
         }
 
         const token = jwt.sign(playload, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
-        res.status(200).json({token, user: playload});
-        
+        res.status(200).json({ token, user: playload });
+
     } catch (error) {
         res.status(500).json({ message: "Error al iniciar sesión" });
         console.log(error);
-        
+
     }
 }
 

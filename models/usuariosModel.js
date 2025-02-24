@@ -34,21 +34,21 @@ export async function getUsuarioId(id) {
 }
 
 export async function createUsuario(date) {
-    const {nombre, apellido, correo, dni, legajo, password, rol} = date;
+    const { nombre, apellido, correo, dni, legajo, password, rol } = date;
 
     const query = `INSERT INTO usuario (nombre_usuario, apellido_usuario, dni_usuario, password_usuario, correo_usuario, nivel_usuario, legajo_usuario) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-    try{
+    try {
         const [results] = await db.query(query, [nombre, apellido, dni, password, correo, rol, legajo]);
         return results;
-    }catch (error){
+    } catch (error) {
         throw error;
     }
 }
 
 
 export async function updateUsuarios(id, data) {
-    const {nombre, apellido, correo, dni, legajo, rol} = data;
+    const { nombre, apellido, correo, dni, legajo, rol } = data;
 
     const query = `UPDATE usuario SET nombre_usuario = ?, apellido_usuario = ?, dni_usuario = ?, correo_usuario = ?, nivel_usuario = ?, legajo_usuario = ? WHERE id_usuario = ?`;
 

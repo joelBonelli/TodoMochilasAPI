@@ -24,8 +24,8 @@ route.get("/usuarios", usuariosController.getUsuarios);
 route.get("/usuarios/:id", usuariosController.getUsuariosId);
 
 route.post("/usuarios/create", upload.none(), verifyToken, usuariosController.createUsuario);
-route.put("/usuarios/actualizar/:id",upload.none(), verifyToken, usuariosController.updateUsuariosId);
-route.delete("/usuarios/delete/:id", verifyToken,usuariosController.deleteUsuario);
+route.put("/usuarios/actualizar/:id", upload.none(), verifyToken, usuariosController.updateUsuariosId);
+route.delete("/usuarios/delete/:id", verifyToken, usuariosController.deleteUsuario);
 route.post("/usuarios/register", upload.none(), usuariosController.createUsuario);
 route.get("/usuarios/sesion", usuariosController.getUsuarios);
 route.post("/usuarios/login", usuariosController.loginUsuario);

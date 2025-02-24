@@ -8,7 +8,7 @@ async function encryptExistingPasswords() {
 
         for (const usuario of usuarios) {
             const hashedPassword = await bcrypt.hash(usuario.password_usuario, 10);
-            
+
             console.log(`🔒 ID: ${usuario.id_usuario} - Nueva contraseña: ${hashedPassword} (longitud: ${hashedPassword.length})`);
 
             await db.query("UPDATE usuario SET password_usuario = ? WHERE id_usuario = ?", [hashedPassword, usuario.id_usuario]);

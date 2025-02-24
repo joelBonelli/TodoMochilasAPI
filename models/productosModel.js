@@ -24,7 +24,7 @@ export async function getProductosId(id) {
 
         if (results.length > 0) {
             results[0].foto_mochila = IMAGE_BASE_URL + results[0].foto_mochila;
-           // results[0];
+            // results[0];
         }
         return results
     } catch (error) {
@@ -33,7 +33,7 @@ export async function getProductosId(id) {
 }
 
 
-export async function updateProductos(id, data){
+export async function updateProductos(id, data) {
     const { nombre, precio, descripcion, imagen } = data;
     // Valores fijos
     const stock = 100; // Valor fijo para 'stock'
@@ -56,7 +56,7 @@ export async function createProducto(date) {
     const query = `INSERT INTO mochila (nombre_mochila, precio_mochila, stock_mochila, descripcion_mochila, proveedor_id_proveedor, foto_mochila) VALUES (?, ?, ?, ?, ?, ?)`;
 
     try {
-        const [results] = await db.query(query, [nombre, precio, stock, descripcion, proveedorId, imagen ]);
+        const [results] = await db.query(query, [nombre, precio, stock, descripcion, proveedorId, imagen]);
         return results;
     } catch (error) {
         throw error;
@@ -76,12 +76,12 @@ export async function deleteProducto(id) {
 }
 
 export const restarStock = async (id, cantidad) => {
-        const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ?`;
-        try {
-            const [results] = await db.query(query, [cantidad, id]);
-            return results;
-        } catch (error) {
-            throw error;
-        }
+    const query = `UPDATE mochila SET stock_mochila = stock_mochila - ? WHERE id_mochila = ?`;
+    try {
+        const [results] = await db.query(query, [cantidad, id]);
+        return results;
+    } catch (error) {
+        throw error;
+    }
 };
 

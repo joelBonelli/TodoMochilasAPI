@@ -7,23 +7,23 @@ export async function getProductos(req, res) {
         const results = await productosModel.getProductos()
         res.status(200).json(results);
     } catch (error) {
-        res.status(500).json( { message: "Error al recuperar los datos"});
+        res.status(500).json({ message: "Error al recuperar los datos" });
     }
 }
 
-export async function getProductosId( req, res) {
+export async function getProductosId(req, res) {
     const id = req.params.id
 
     try {
         const results = await productosModel.getProductosId(id)
         res.status(200).json(results)
     } catch (error) {
-        res.status(500).json( { message: "Error al recuperar el dato del producto"})
+        res.status(500).json({ message: "Error al recuperar el dato del producto" })
     }
 }
 
 
-export async function updateProductosId( req, res) {
+export async function updateProductosId(req, res) {
     const id = req.params.id
     const { nombre, precio, descripcion, imagenActual } = req.body;
 
@@ -37,7 +37,7 @@ export async function updateProductosId( req, res) {
     } else {
         console.log('No se recibió ningún archivo');
     }
-  
+
     const imagen = req.file ? req.file.filename : req.body.imagenActual;
 
     if (!nombre || !precio || !descripcion) {
@@ -51,7 +51,7 @@ export async function updateProductosId( req, res) {
         // Actualizar el producto con la nueva imagen
         const update = await productosModel.updateProductos(id, updateData);
         if (update.affectedRows > 0) {
-         
+
             res.status(200).json({ message: "Producto actualizado correctamente" });
         } else {
             res.status(404).json({ message: "Producto no encontrado" });
@@ -65,11 +65,11 @@ export async function updateProductosId( req, res) {
 
 
 export async function createProducto(req, res) {
-    const { nombre, precio, descripcion} = req.body;
+    const { nombre, precio, descripcion } = req.body;
     const imagen = req.file ? req.file.filename : '';
 
     console.log('Imagen recibida:', imagen);  // Verifica el nombre de la imagen
-    
+
 
     if (!nombre || !precio || !descripcion || !imagen) {
         return res.status(400).json({ message: "Todos los campos son obligatorios." });
@@ -78,27 +78,27 @@ export async function createProducto(req, res) {
     try {
         const create = await productosModel.createProducto({ nombre, precio, descripcion, imagen });
         if (create.insertId) {
-            res.status(200).json( { message: "Producto Insertado Correctamente." });
+            res.status(200).json({ message: "Producto Insertado Correctamente." });
             console.log("mochila insertada");
-            
+
         } else {
-            res.status(404).json( { message: "No se pudo crear el producto" });
+            res.status(404).json({ message: "No se pudo crear el producto" });
         }
     } catch (error) {
         console.error("Error al crear el producto:", error);
-        res.status(500).json( { message: "Error al crear el producto", error: error.message });
+        res.status(500).json({ message: "Error al crear el producto", error: error.message });
     }
 }
 
 export async function deleteProducto(req, res) {
-    const id  = req.params.id;
+    const id = req.params.id;
 
     try {
         const results = await productosModel.deleteProducto(id)
         res.status(200).json(results)
     } catch (error) {
-        res.status(500).json( { message: "Error al eliminar el producto"})
-        console.log(error);  
+        res.status(500).json({ message: "Error al eliminar el producto" })
+        console.log(error);
     }
 }
 
@@ -107,7 +107,7 @@ export async function deleteProducto(req, res) {
 export async function restarStock(req, res) {
     const { id } = req.params;
     const { cantidad } = req.body;
-    
+
 
     // Validar cantidad
     if (!cantidad || isNaN(cantidad) || cantidad <= 0) {
@@ -117,7 +117,7 @@ export async function restarStock(req, res) {
     try {
         // Obtener el producto por ID para verificar su stock actual
         const producto = await productosModel.getProductosId(id);
-               
+
 
         if (!producto) {
             return res.status(404).json({ message: "El producto no existe." });
@@ -128,8 +128,8 @@ export async function restarStock(req, res) {
             return res.status(400).json({ message: "Stock insuficiente." });
         }
         console.log(cantidad);
-        
-        
+
+
         // Restar el stock
         const result = await productosModel.restarStock(id, cantidad);
 
