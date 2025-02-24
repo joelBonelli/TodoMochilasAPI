@@ -14,8 +14,8 @@ route.get("/productos/:id", productosController.getProductosId);
 route.post("/productos/create", upload.single('imagen'), verifyToken, productosController.createProducto);
 route.put("/productos/actualizar/:id", upload.single('imagen'), verifyToken, productosController.updateProductosId);
 route.delete("/productos/delete/:id", verifyToken, productosController.deleteProducto);
-//route.put('/productos/:id/restar-stock', verifyToken, productosController.restarStock);
-route.put('/productos/:id/restar-stock', productosController.restarStock);
+route.put('/productos/:id/restar-stock', verifyToken, productosController.restarStock);
+//route.put('/productos/:id/restar-stock', productosController.restarStock);
 
 
 
