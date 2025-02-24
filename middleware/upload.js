@@ -13,11 +13,9 @@ if (!fs.existsSync(imagesFolder)) {
 // Configuración de multer para el almacenamiento de imágenes
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        // Las imágenes se guardarán en 'public/images'
         cb(null, imagesFolder); // Usa la carpeta creada o asegurada
     },
     filename: (req, file, cb) => {
-        // El nombre del archivo será único usando la fecha actual
         cb(null, file.originalname);
     }
 });
@@ -42,5 +40,5 @@ const upload = multer({
     fileFilter
 });
 
-// Exportar la configuración de multer
+
 export default upload;

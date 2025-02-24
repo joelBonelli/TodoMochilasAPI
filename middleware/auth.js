@@ -5,7 +5,6 @@ dotenv.config(); // Cargar variables de entorno
 
 export function verifyToken(req, res, next) {
     const token = req.headers['authorization']?.split(' ')[1];
-    console.log("Token recibido en el servidor:", token);
 
     if (!token) {
         return res.status(401).json({ message: 'No autorizado, token faltante' });

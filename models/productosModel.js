@@ -1,5 +1,4 @@
 import db from '../db.js';
-import * as productosModel from "../models/productosModel.js";
 
 export async function getProductos() {
     const query = "SELECT * FROM mochila";
@@ -24,7 +23,6 @@ export async function getProductosId(id) {
 
         if (results.length > 0) {
             results[0].foto_mochila = IMAGE_BASE_URL + results[0].foto_mochila;
-            // results[0];
         }
         return results
     } catch (error) {

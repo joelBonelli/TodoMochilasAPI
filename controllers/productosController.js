@@ -1,5 +1,4 @@
 import * as productosModel from "../models/productosModel.js";
-import db from '../db.js';
 
 
 export async function getProductos(req, res) {
@@ -26,18 +25,6 @@ export async function getProductosId(req, res) {
 export async function updateProductosId(req, res) {
     const id = req.params.id
     const { nombre, precio, descripcion, imagenActual } = req.body;
-
-    console.log("Body recibido:", req.body);
-    console.log("Archivo recibido:", req.file);
-
-
-    // Verifica si multer está recibiendo el archivo
-    if (req.file) {
-        console.log('Archivo recibido:', req.file);
-    } else {
-        console.log('No se recibió ningún archivo');
-    }
-
     const imagen = req.file ? req.file.filename : req.body.imagenActual;
 
     if (!nombre || !precio || !descripcion) {
@@ -68,9 +55,6 @@ export async function createProducto(req, res) {
     const { nombre, precio, descripcion } = req.body;
     const imagen = req.file ? req.file.filename : '';
 
-    console.log('Imagen recibida:', imagen);  // Verifica el nombre de la imagen
-
-
     if (!nombre || !precio || !descripcion || !imagen) {
         return res.status(400).json({ message: "Todos los campos son obligatorios." });
     }
@@ -79,13 +63,10 @@ export async function createProducto(req, res) {
         const create = await productosModel.createProducto({ nombre, precio, descripcion, imagen });
         if (create.insertId) {
             res.status(200).json({ message: "Producto Insertado Correctamente." });
-            console.log("mochila insertada");
-
         } else {
             res.status(404).json({ message: "No se pudo crear el producto" });
         }
     } catch (error) {
-        console.error("Error al crear el producto:", error);
         res.status(500).json({ message: "Error al crear el producto", error: error.message });
     }
 }
@@ -98,7 +79,6 @@ export async function deleteProducto(req, res) {
         res.status(200).json(results)
     } catch (error) {
         res.status(500).json({ message: "Error al eliminar el producto" })
-        console.log(error);
     }
 }
 
@@ -127,9 +107,7 @@ export async function restarStock(req, res) {
         if (producto.stock_mochila < cantidad) {
             return res.status(400).json({ message: "Stock insuficiente." });
         }
-        console.log(cantidad);
-
-
+        
         // Restar el stock
         const result = await productosModel.restarStock(id, cantidad);
 

@@ -15,8 +15,6 @@ export async function getUsuarios(req, res) {
 export async function getUsuariosId(req, res) {
     const id = req.params.id
 
-    console.log(id)
-
     try {
         const results = await usuariosModel.getUsuarioId(id)
         res.status(200).json(results)
@@ -29,9 +27,7 @@ export async function getUsuariosId(req, res) {
 export async function updateUsuariosId(req, res) {
     const id = req.params.id;
     const { correo, nombre, apellido, dni, rol, legajo } = req.body;
-
-    console.log(id)
-
+    
     if (!correo || !nombre || !apellido || !dni || !rol || !legajo) {
         return res.status(400).json({ message: "Todos los campos son obligatorios" });
     }
@@ -54,8 +50,7 @@ export async function updateUsuariosId(req, res) {
 
 export async function loginUsuario(req, res) {
     const { email, password } = req.body;
-    console.log("Contraseña ingresada:", password); // 🔍 Verifica qué está llegando
-
+    
     try {
         const usuario = await usuariosModel.getUsuarioEmail(email);
 
@@ -63,16 +58,12 @@ export async function loginUsuario(req, res) {
             return res.status(401).json({ message: "Correo Electrónico o Contraseña Incorrectos" });
         }
 
-        console.log("Contraseña en BD:", usuario.password_usuario); // 🔍 Verifica la contraseña encriptada
-
         const isPasswordValid = await usuariosModel.validatePassword(password, usuario.password_usuario);
 
         if (!isPasswordValid) {
-            console.log("❌ Contraseña incorrecta");
             return res.status(401).json({ message: "Correo Electrónico o Contraseña Incorrectos" });
         }
-        console.log("✅ Contraseña correcta");
-
+        
         const playload = {
             nombre_usuario: usuario.nombre_usuario,
             apellido_usuario: usuario.apellido_usuario,
@@ -84,8 +75,6 @@ export async function loginUsuario(req, res) {
 
     } catch (error) {
         res.status(500).json({ message: "Error al iniciar sesión" });
-        console.log(error);
-
     }
 }
 
@@ -97,7 +86,6 @@ export async function deleteUsuario(req, res) {
         res.status(200).json(results)
     } catch (error) {
         res.status(500).json({ message: "Error al eliminar el usuario" });
-        console.log(error);
     }
 }
 
