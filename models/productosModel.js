@@ -36,7 +36,7 @@ export async function getProductosId(id) {
 export async function updateProductos(id, data){
     const { nombre, precio, descripcion, imagen } = data;
     // Valores fijos
-   // const stock = 100; // Valor fijo para 'stock'
+    const stock = 100; // Valor fijo para 'stock'
     const proveedorId = 1; // Valor fijo para 'proveedorId'
 
     const query = `UPDATE mochila SET nombre_mochila = ?, precio_mochila = ?, stock_mochila = ?, descripcion_mochila = ?, proveedor_id_proveedor = ?, foto_mochila = ? WHERE id_mochila = ? `;
